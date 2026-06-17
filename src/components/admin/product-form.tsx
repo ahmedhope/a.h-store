@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CloudinaryUpload } from "@/components/admin/cloudinary-upload";
 import { createProduct, updateProduct } from "@/actions/products";
 import { parseImages } from "@/lib/utils";
+import { parseColors } from "@/lib/colors";
 import { Plus, X, Video } from "lucide-react";
 import type { Category, Product } from "@prisma/client";
 
@@ -18,6 +19,8 @@ interface Props {
   product?: Product;
 }
 
+interface ColorEntry { name: string; hex: string; }
+
 const defaultSizes = ["S", "M", "L", "XL", "XXL"];
 
 export function ProductForm({ categories, product }: Props) {
@@ -25,9 +28,17 @@ export function ProductForm({ categories, product }: Props) {
   const [categoryId, setCategoryId] = useState(product?.categoryId ?? "");
   const [images, setImages] = useState<string[]>(product ? parseImages(product.images) : []);
   const [sizes, setSizes] = useState<string[]>(product ? JSON.parse(product.sizes || "[]") : []);
-  const [colors, setColors] = useState<string[]>(product ? JSON.parse(product.colors || "[]") : []);
+  const [colors, setColors] = useState<ColorEntry[]>(product ? parseColors(product.colors) : []);
   const [newSize, setNewSize] = useState("");
-  const [newColor, setNewColor] = useState("");
+  const [newColorName, setNewColorName] = useState("");
+
+  const updateColor = (name: string, hex: string) => {
+    const entry: ColorEntry = { name: name || hex, hex: hex.startsWith("#") ? hex : "#" + hex };
+    if (!colors.some((c) => c.name === entry.name || c.hex === entry.hex)) {
+      setColors([...colors, entry]);
+    }
+    setNewColorName("");
+  };
 
   async function handleSubmit(formData: FormData) {
     formData.set("categoryId", categoryId);
@@ -118,9 +129,9 @@ export function ProductForm({ categories, product }: Props) {
         <Label>الألوان المتاحة</Label>
         <div className="flex flex-wrap gap-2 mb-2">
           {colors.map((c, i) => (
-            <span key={i} className="inline-flex items-center gap-1 px-3 py-1 rounded-md border text-sm">
-              <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: c }} />
-              {c}
+            <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border text-sm">
+              <span className="w-3 h-3 rounded-full inline-block ring-1 ring-black/10" style={{ backgroundColor: c.hex }} />
+              {c.name}
               <button type="button" onClick={() => setColors(colors.filter((_, j) => j !== i))} className="text-destructive">
                 <X className="h-3 w-3" />
               </button>
@@ -128,9 +139,9 @@ export function ProductForm({ categories, product }: Props) {
           ))}
         </div>
         <div className="flex gap-2">
-          <Input value={newColor} onChange={(e) => setNewColor(e.target.value)} placeholder="اسم اللون" className="w-32" />
-          <Input type="color" className="w-10 h-10 p-1" onChange={(e) => { const name = newColor || e.target.value; if (name && !colors.includes(name)) { setColors([...colors, name]); setNewColor(""); }}} />
-          <Button type="button" variant="outline" size="icon" onClick={() => { if (newColor && !colors.includes(newColor)) { setColors([...colors, newColor]); setNewColor(""); }}}>
+          <Input value={newColorName} onChange={(e) => setNewColorName(e.target.value)} placeholder="اسم اللون" className="w-32" />
+          <Input type="color" className="w-10 h-10 p-1" onChange={(e) => updateColor(newColorName, e.target.value)} />
+          <Button type="button" variant="outline" size="icon" onClick={() => { if (newColorName) updateColor(newColorName, "#cccccc"); }}>
             <Plus className="h-4 w-4" />
           </Button>
         </div>

@@ -1,6 +1,7 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
+import { getColorName } from "@/lib/colors";
 import { notFound } from "next/navigation";
 import { OrderStatusDropdown } from "@/components/admin/order-status-dropdown";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,7 +64,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                   <div className="flex gap-2 text-xs text-muted-foreground mt-0.5">
                     <span>{formatPrice(item.price)}</span>
                     {item.size && <span className="bg-muted px-1.5 py-0.5 rounded">مقاس {item.size}</span>}
-                    {item.color && <span className="bg-muted px-1.5 py-0.5 rounded">{item.color}</span>}
+                    {item.color && <span className="bg-muted px-1.5 py-0.5 rounded">{getColorName(item.color)}</span>}
                   </div>
                 </div>
                 <div className="text-left">

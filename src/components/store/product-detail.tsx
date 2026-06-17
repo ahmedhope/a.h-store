@@ -3,10 +3,10 @@
 import { useState } from "react";
 import type { ProductWithCategory } from "@/types";
 import { formatPrice, parseImages } from "@/lib/utils";
+import { parseColors, getColorName } from "@/lib/colors";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Play, Check, Share2, Sparkles, Heart, Minus, Plus, ChevronLeft } from "lucide-react";
 
-interface ParsedColor { name: string; hex: string; }
 interface ParsedSize { label: string; stock: number; }
 
 export function ProductDetail({ product }: { product: ProductWithCategory }) {
@@ -20,9 +20,8 @@ export function ProductDetail({ product }: { product: ProductWithCategory }) {
   const [wishlisted, setWishlisted] = useState(false);
 
   const rawSizes: any[] = product.sizes ? JSON.parse(product.sizes) : [];
-  const rawColors: any[] = product.colors ? JSON.parse(product.colors) : [];
   const sizes: ParsedSize[] = rawSizes.map((s) => typeof s === "string" ? { label: s, stock: 999 } : s);
-  const colors: ParsedColor[] = rawColors.map((c) => typeof c === "string" ? { name: c.startsWith("#") ? c : c, hex: c.startsWith("#") ? c : "#888" } : c);
+  const colors = parseColors(product.colors);
 
   const hasDiscount = product.compareAt && product.compareAt > product.price;
   const discountPercent = hasDiscount ? Math.round((1 - product.price / product.compareAt!) * 100) : 0;
@@ -47,7 +46,7 @@ export function ProductDetail({ product }: { product: ProductWithCategory }) {
 
   function getWhatsAppLink() {
     const num = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "966500000000";
-    const msg = `مرحباً، أريد شراء:\n${product.name}\n${selectedSize ? `المقاس: ${selectedSize}\n` : ""}${selectedColor ? `اللون: ${selectedColor}\n` : ""}الكمية: ${quantity}\nالسعر: ${formatPrice(product.price * quantity)}`;
+    const msg = `مرحباً، أريد شراء:\n${product.name}\n${selectedSize ? `المقاس: ${selectedSize}\n` : ""}${selectedColor ? `اللون: ${getColorName(selectedColor)}\n` : ""}الكمية: ${quantity}\nالسعر: ${formatPrice(product.price * quantity)}`;
     return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
   }
 

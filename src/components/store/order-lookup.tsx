@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getColorName } from "@/lib/colors";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, Package, Phone, Calendar, Clock } from "lucide-react";
@@ -90,7 +91,7 @@ export function OrderLookup() {
                 <div className="space-y-1">
                   {order.items.map((item: any) => (
                     <div key={item.id} className="flex justify-between">
-                      <span>{item.name}{item.size ? ` - ${item.size}` : ""}{item.color ? ` (${item.color})` : ""}</span>
+                      <span>{item.name}{item.size ? ` - ${item.size}` : ""}{item.color ? ` (${getColorName(item.color)})` : ""}</span>
                       <span className="text-muted-foreground">x{item.quantity}</span>
                     </div>
                   ))}

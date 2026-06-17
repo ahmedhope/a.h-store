@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
+import { getColorName } from "@/lib/colors";
 import { OrderStatusDropdown } from "@/components/admin/order-status-dropdown";
 import { Search, ShoppingBag, Eye } from "lucide-react";
 import Link from "next/link";
@@ -96,7 +97,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
                 <td className="p-3 hidden lg:table-cell">
                   <div className="text-xs space-y-0.5 max-w-[200px] truncate">
                     {order.items.map((item) => (
-                      <span key={item.id} className="block truncate">{item.name} × {item.quantity}{item.size ? ` - مقاس ${item.size}` : ""}{item.color ? ` - ${item.color}` : ""}</span>
+                      <span key={item.id} className="block truncate">{item.name} × {item.quantity}{item.size ? ` - مقاس ${item.size}` : ""}{item.color ? ` - ${getColorName(item.color)}` : ""}</span>
                     ))}
                   </div>
                 </td>

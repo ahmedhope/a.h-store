@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Trash2, Minus, Plus, ShoppingBag, ArrowLeft, Phone, User, FileText, MessageSquare } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import { getColorName } from "@/lib/colors";
 import { createOrder } from "@/actions/orders";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -62,7 +63,7 @@ export function CartContent() {
       setError(result.error);
     } else if (result.success && result.order) {
       const { order } = result;
-      const itemsText = cart.map((i: any) => `• ${i.name}${i.size ? ` - مقاس ${i.size}` : ""}${i.color ? ` (${i.color})` : ""} × ${i.quantity} = ${formatPrice(i.price * i.quantity)}`).join("\n");
+      const itemsText = cart.map((i: any) => `• ${i.name}${i.size ? ` - مقاس ${i.size}` : ""}${i.color ? ` (${getColorName(i.color)})` : ""} × ${i.quantity} = ${formatPrice(i.price * i.quantity)}`).join("\n");
       const message = encodeURIComponent(
         `طلب جديد من متجر a&h:\n\nالعميل: ${formData.get("customerName")}\nالهاتف: ${formData.get("customerPhone")}\n\nالمنتجات:\n${itemsText}\n${couponCode ? `\nكود خصم: ${couponCode} (توفير ${formatPrice(discount)})` : ""}\nالإجمالي: ${formatPrice(order.total)}\n\nرقم الطلب: ${order.id.slice(-6).toUpperCase()}`
       );
@@ -104,7 +105,7 @@ export function CartContent() {
               <div className="flex flex-wrap gap-2 text-xs text-muted-foreground mt-1.5">
                 <span className="font-semibold text-primary">{formatPrice(item.price)}</span>
                 {item.size && <span className="bg-gradient-to-l from-primary/10 to-chart-4/10 px-2 py-0.5 rounded-full text-primary border border-primary/10">{item.size}</span>}
-                {item.color && <span className="bg-gradient-to-l from-accent/10 to-chart-2/10 px-2 py-0.5 rounded-full text-accent-foreground border border-accent/10">{item.color}</span>}
+                {item.color && <span className="bg-gradient-to-l from-accent/10 to-chart-2/10 px-2 py-0.5 rounded-full text-accent-foreground border border-accent/10">{getColorName(item.color)}</span>}
               </div>
             </div>
             <div className="flex items-center gap-3 shrink-0">
