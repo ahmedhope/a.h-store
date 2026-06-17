@@ -122,12 +122,12 @@ export async function getProducts(categorySlug?: string, q?: string) {
   });
 }
 
-export async function getProduct(slug: string) {
+export const getProduct = cache(async (slug: string) => {
   return prisma.product.findUnique({
     where: { slug },
     include: { category: true },
   });
-}
+});
 
 export const getCategories = cache(async () => {
   return prisma.category.findMany({ orderBy: { name: "asc" } });
