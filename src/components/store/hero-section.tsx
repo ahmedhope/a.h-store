@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Sparkles, ShoppingBag, Eye } from "lucide-react";
-import type { Category } from "@/generated/prisma";
+import type { Category } from "@prisma/client";
 
 export function HeroSection({ categories, settings }: { categories: Category[]; settings?: Record<string, string> }) {
   return (

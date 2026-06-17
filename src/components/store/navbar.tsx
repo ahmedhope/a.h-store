@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import type { Category } from "@/generated/prisma";
+import type { Category } from "@prisma/client";
 
 export function Navbar({ categories, settings }: { categories: Category[]; settings?: Record<string, string> }) {
   const [cartCount, setCartCount] = useState(0);

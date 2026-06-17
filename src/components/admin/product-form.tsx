@@ -11,7 +11,7 @@ import { CloudinaryUpload } from "@/components/admin/cloudinary-upload";
 import { createProduct, updateProduct } from "@/actions/products";
 import { parseImages } from "@/lib/utils";
 import { Plus, X, Video } from "lucide-react";
-import type { Category, Product } from "@/generated/prisma";
+import type { Category, Product } from "@prisma/client";
 
 interface Props {
   categories: Category[];
