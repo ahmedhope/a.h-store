@@ -41,3 +41,10 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+/scripts/schema.sql
+auth
+auth-wal
+dev-error.txt
+dev-output.txt
+
+.vercel
