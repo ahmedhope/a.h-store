@@ -71,19 +71,25 @@ export interface ColorInfo {
   hex: string;
 }
 
+function normalizeHex(s: string): string {
+  const m = s.trim().match(/^#?([0-9a-fA-F]{3,8})$/);
+  return m ? "#" + m[1].toLowerCase() : "#888888";
+}
+
 export function parseColor(raw: unknown): ColorInfo {
   if (raw && typeof raw === "object") {
     const obj = raw as Record<string, unknown>;
-    const hex = typeof obj.hex === "string" && obj.hex.startsWith("#") ? obj.hex : "#888888";
-    const name = typeof obj.name === "string" && obj.name ? obj.name : hex;
+    const hex = typeof obj.hex === "string" ? normalizeHex(obj.hex) : "#888888";
+    const name = typeof obj.name === "string" && obj.name.trim() ? obj.name.trim() : hex;
     return { name, hex };
   }
-  const str = String(raw || "");
-  if (str.startsWith("#")) {
-    const key = str.toLowerCase();
-    return { name: hexToName[key] || str, hex: str };
+  const str = String(raw || "").trim();
+  const hexMatch = str.match(/^#?([0-9a-fA-F]{6})$/);
+  if (hexMatch) {
+    const hex = "#" + hexMatch[1].toLowerCase();
+    return { name: hexToName[hex] || str, hex };
   }
-  return { name: str, hex: "#888888" };
+  return { name: str, hex: str.match(/^#[0-9a-fA-F]{3,8}$/) ? str : "#888888" };
 }
 
 export function parseColors(raw: string | null | undefined): ColorInfo[] {
