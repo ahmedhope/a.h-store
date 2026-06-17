@@ -14,7 +14,7 @@ const ProductSchema = z.object({
   price: z.coerce.number().positive("السعر يجب أن يكون أكبر من 0"),
   compareAt: z.coerce.number().optional(),
   stock: z.coerce.number().int().min(0, "المخزون لا يمكن أن يكون سالباً"),
-  categoryId: z.string().min(1, "الفئة مطلوبة"),
+  categoryId: z.string().optional().default(""),
   images: z.string().optional(),
   isVisible: z.coerce.boolean().optional(),
   isFeatured: z.coerce.boolean().optional(),
@@ -30,7 +30,6 @@ export async function createProduct(formData: FormData) {
     const parsed = ProductSchema.parse(raw);
 
     let slug = slugify(parsed.name);
-    // Ensure unique slug
     const existing = await prisma.product.findUnique({ where: { slug } });
     if (existing) slug = `${slug}-${Date.now()}`;
 
@@ -39,6 +38,7 @@ export async function createProduct(formData: FormData) {
       ...rest,
       slug,
       isVisible: parsed.isVisible ?? true,
+      categoryId: rest.categoryId || null,
     };
     if (parsed.tags !== undefined) data.tags = parsed.tags || "";
     if (parsed.sizes !== undefined) data.sizes = parsed.sizes || "[]";
@@ -50,9 +50,10 @@ export async function createProduct(formData: FormData) {
     logger.info("Product created", { name: parsed.name, slug });
     revalidatePath("/admin/products");
     revalidatePath("/");
+    return { success: true };
   } catch (err: any) {
     logger.error("createProduct failed", { error: err.message });
-    throw new Error(err.message);
+    return { success: false, error: err.message };
   }
 }
 
@@ -69,6 +70,7 @@ export async function updateProduct(id: string, formData: FormData) {
     const data: any = {
       ...rest,
       slug,
+      categoryId: rest.categoryId || null,
     };
     if (parsed.tags !== undefined) data.tags = parsed.tags || "";
     if (parsed.sizes !== undefined) data.sizes = parsed.sizes || "[]";
@@ -80,9 +82,10 @@ export async function updateProduct(id: string, formData: FormData) {
     logger.info("Product updated", { id, name: parsed.name });
     revalidatePath("/admin/products");
     revalidatePath("/");
+    return { success: true };
   } catch (err: any) {
     logger.error("updateProduct failed", { error: err.message });
-    throw new Error(err.message);
+    return { success: false, error: err.message };
   }
 }
 
@@ -142,13 +145,21 @@ export async function getAllProducts() {
 }
 
 export async function toggleProductVisibility(id: string, isVisible: boolean) {
-  await prisma.product.update({ where: { id }, data: { isVisible } });
+  try {
+    await prisma.product.update({ where: { id }, data: { isVisible } });
+  } catch {
+    // ignore
+  }
   revalidatePath("/admin/products");
   revalidatePath("/");
 }
 
 export async function toggleProductFeatured(id: string, isFeatured: boolean) {
-  await prisma.product.update({ where: { id }, data: { isFeatured } });
+  try {
+    await prisma.product.update({ where: { id }, data: { isFeatured } });
+  } catch {
+    // ignore
+  }
   revalidatePath("/admin/products");
   revalidatePath("/");
 }
