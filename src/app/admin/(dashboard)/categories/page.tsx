@@ -3,8 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trash2, Plus, ArrowRight } from "lucide-react";
+import { Plus, ArrowRight } from "lucide-react";
 import { createCategory, deleteCategory } from "@/actions/categories";
+import { DeleteButton } from "@/components/admin/delete-button";
 import Link from "next/link";
 
 export default async function AdminCategoriesPage() {
@@ -39,10 +40,8 @@ export default async function AdminCategoriesPage() {
               <tr key={cat.id} className="border-b border-border/30 hover:bg-muted/20 transition-colors">
                 <td className="p-3 font-medium">{cat.name}</td>
                 <td className="p-3">{cat._count.products}</td>
-                <td className="p-3 text-left">
-                  <form action={deleteCategory.bind(null, cat.id)}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"><Trash2 className="h-3.5 w-3.5" /></Button>
-                  </form>
+                  <td className="p-3 text-left">
+                  <DeleteButton action={deleteCategory} id={cat.id} />
                 </td>
               </tr>
             ))}

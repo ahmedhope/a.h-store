@@ -2,10 +2,11 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Search, Eye, EyeOff, Star, Copy, Package } from "lucide-react";
+import { Plus, Edit, Search, Eye, EyeOff, Star, Copy, Package } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import Link from "next/link";
 import { deleteProduct, toggleProductVisibility, toggleProductFeatured } from "@/actions/products";
+import { DeleteButton } from "@/components/admin/delete-button";
 
 export default async function AdminProductsPage({ searchParams }: { searchParams: Promise<{ q?: string; category?: string; stock?: string }> }) {
   await requireAdmin();
@@ -117,9 +118,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     <Link href={`/products/${product.slug}`}>
                       <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-chart-4/10 hover:text-chart-4"><Copy className="h-3.5 w-3.5" /></Button>
                     </Link>
-                    <form action={deleteProduct.bind(null, product.id)}>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"><Trash2 className="h-3.5 w-3.5" /></Button>
-                    </form>
+                    <DeleteButton action={deleteProduct} id={product.id} />
                   </div>
                 </td>
               </tr>

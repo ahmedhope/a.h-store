@@ -113,7 +113,12 @@ export async function getOrderById(id: string) {
 }
 
 export async function deleteOrder(id: string) {
-  await prisma.order.delete({ where: { id } });
-  revalidatePath("/admin/orders");
-  logger.info("Order deleted", { id });
+  try {
+    await prisma.order.delete({ where: { id } });
+    revalidatePath("/admin/orders");
+    logger.info("Order deleted", { id });
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: "فشل حذف الطلب" };
+  }
 }

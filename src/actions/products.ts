@@ -92,9 +92,10 @@ export async function deleteProduct(id: string) {
     logger.info("Product deleted", { id });
     revalidatePath("/admin/products");
     revalidatePath("/");
+    return { success: true };
   } catch (err: any) {
     logger.error("deleteProduct failed", { error: err.message });
-    throw new Error(err.message);
+    return { success: false, error: err.message.includes("foreign key") || err.message.includes("ForeignKey") || err.message.includes("constraint") ? "لا يمكن حذف المنتج لأنه مرتبط بطلبات سابقة" : err.message };
   }
 }
 

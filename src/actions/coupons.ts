@@ -58,8 +58,13 @@ export async function updateCoupon(id: string, formData: FormData) {
 }
 
 export async function deleteCoupon(id: string) {
-  await prisma.coupon.delete({ where: { id } });
-  revalidatePath("/admin/coupons");
+  try {
+    await prisma.coupon.delete({ where: { id } });
+    revalidatePath("/admin/coupons");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: "فشل حذف كود الخصم" };
+  }
 }
 
 export async function toggleCoupon(id: string, isActive: boolean) {

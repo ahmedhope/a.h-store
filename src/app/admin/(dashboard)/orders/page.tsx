@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
 import { OrderStatusDropdown } from "@/components/admin/order-status-dropdown";
-import { Search, ShoppingBag, Trash2, Eye } from "lucide-react";
+import { Search, ShoppingBag, Eye } from "lucide-react";
 import Link from "next/link";
 import { deleteOrder } from "@/actions/orders";
+import { DeleteButton } from "@/components/admin/delete-button";
 
 const statusLabels: Record<string, string> = {
   pending: "قيد الانتظار", confirmed: "تم التأكيد", shipped: "تم الشحن", delivered: "تم التوصيل", cancelled: "ملغي",
@@ -108,9 +109,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
                     <Link href={`/admin/orders/${order.id}`}>
                       <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary"><Eye className="h-3.5 w-3.5" /></Button>
                     </Link>
-                    <form action={deleteOrder.bind(null, order.id)}>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"><Trash2 className="h-3.5 w-3.5" /></Button>
-                    </form>
+                    <DeleteButton action={deleteOrder} id={order.id} />
                   </div>
                 </td>
               </tr>

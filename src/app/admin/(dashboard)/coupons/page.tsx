@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, CheckCircle, XCircle, Percent } from "lucide-react";
 import { CopyButton } from "@/components/admin/copy-button";
+import { DeleteButton } from "@/components/admin/delete-button";
 import { formatPrice } from "@/lib/utils";
 import { toggleCoupon, deleteCoupon } from "@/actions/coupons";
 import Link from "next/link";
@@ -54,9 +55,7 @@ export default async function AdminCouponsPage() {
               <Link href={`/admin/coupons/${c.id}`} className="flex-1">
                 <Button variant="outline" size="sm" className="w-full rounded-xl border-border/50">تعديل</Button>
               </Link>
-              <form action={deleteCoupon.bind(null, c.id)}>
-                <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10 rounded-xl">حذف</Button>
-              </form>
+              <DeleteButton action={deleteCoupon} id={c.id} size="sm" label="حذف" className="text-destructive hover:bg-destructive/10 rounded-xl" />
               <CopyButton code={c.code} />
             </div>
           </div>

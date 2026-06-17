@@ -17,6 +17,11 @@ export async function createCategory(formData: FormData) {
 }
 
 export async function deleteCategory(id: string) {
-  await prisma.category.delete({ where: { id } });
-  revalidatePath("/admin/categories");
+  try {
+    await prisma.category.delete({ where: { id } });
+    revalidatePath("/admin/categories");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message.includes("foreign key") || err.message.includes("ForeignKey") || err.message.includes("constraint") ? "لا يمكن حذف الفئة لأنها تحتوي على منتجات" : err.message };
+  }
 }
