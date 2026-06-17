@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Store, ArrowLeft, Headphones, Truck, RotateCcw, ShieldCheck, Sparkles } from "lucide-react";
+import { Store, ArrowLeft, Headphones, Truck, RotateCcw, ShieldCheck } from "lucide-react";
 
 export function Footer({ settings }: { settings?: Record<string, string> }) {
   return (
@@ -115,11 +115,7 @@ export function Footer({ settings }: { settings?: Record<string, string> }) {
       <div className="border-t border-primary/10 bg-gradient-to-r from-transparent via-primary/5 to-transparent">
         <div className="container-store py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} <span className="text-primary font-medium">a&h store</span> — جميع الحقوق محفوظة</p>
-          <p className="flex items-center gap-1.5">
-            <Sparkles className="h-3 w-3 text-primary" />
-            صنع بأناقة
-            <Sparkles className="h-3 w-3 text-chart-4" />
-          </p>
+
         </div>
       </div>
     </footer>
